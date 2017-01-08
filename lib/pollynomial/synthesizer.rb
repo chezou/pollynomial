@@ -6,13 +6,14 @@ module Pollynomial
     DEFAULT_DELIMITER = '[.。]'
     COMMA = '[,、]'
 
-    def initialize(region: 'us-east-1', voice_id: "Joanna", delimiter: DEFAULT_DELIMITER, comma: COMMA)
+    def initialize(region: 'us-east-1', voice_id: "Joanna", delimiter: DEFAULT_DELIMITER, comma: COMMA, output_format: 'mp3')
       @polly = Aws::Polly::Client.new(region: region)
-      @delimiter = delimiter
       # You can use voice IDs http://docs.aws.amazon.com/polly/latest/dg/API_Voice.html
       # If you want to synthesize Japanese voice, you can use "Mizuki"
       @voice_id = voice_id
+      @delimiter = delimiter
       @comma = COMMA
+      @output_format = output_format
     end
 
     def synthesize(text, file_name: "tmp.mp3")
@@ -23,7 +24,7 @@ module Pollynomial
           @polly.synthesize_speech(
             response_target: tmp_file,
             text: _text,
-            output_format: "mp3",
+            output_format: @output_format,
             voice_id: @voice_id
             )
           IO.copy_stream(tmp_file, file)
