@@ -6,7 +6,7 @@ module Pollynomial
     DEFAULT_DELIMITER = '[.。]'
     COMMA = '[,、]'
 
-    def initialize(region='us-east-1', delimiter=DEFAULT_DELIMITER, voice_id="Joanna", comma=COMMA)
+    def initialize(region: 'us-east-1', voice_id: "Joanna", delimiter: DEFAULT_DELIMITER, comma: COMMA)
       @polly = Aws::Polly::Client.new(region: region)
       @delimiter = delimiter
       # You can use voice IDs http://docs.aws.amazon.com/polly/latest/dg/API_Voice.html
@@ -15,8 +15,8 @@ module Pollynomial
       @comma = COMMA
     end
 
-    def synthesize(text, file_name="tmp.mp3")
-      File.delete(file_name)
+    def synthesize(text, file_name: "tmp.mp3")
+      File.delete(file_name) if File.exist?(file_name)
       File.open(file_name, 'ab') do |file|
         split_text(text).each do |_text|
           tmp_file = Tempfile.new
