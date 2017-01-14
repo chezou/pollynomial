@@ -1,4 +1,4 @@
-require 'aws-sdk'
+require 'aws-sdk-polly'
 
 module Pollynomial
   class Synthesizer
@@ -6,14 +6,18 @@ module Pollynomial
     DEFAULT_DELIMITER = '[.。]'
     COMMA = '[,、]'
 
-    def initialize(region: 'us-east-1', voice_id: "Joanna", delimiter: DEFAULT_DELIMITER, comma: COMMA, output_format: 'mp3')
-      @polly = Aws::Polly::Client.new(region: region)
+    attr_reader :voice_id, :output_format, :sample_rate, :client
+
+    def initialize(options={})
+      options[:region] ||= 'us-east-1'
       # You can use voice IDs http://docs.aws.amazon.com/polly/latest/dg/API_Voice.html
       # If you want to synthesize Japanese voice, you can use "Mizuki"
-      @voice_id = voice_id
-      @delimiter = delimiter
-      @comma = COMMA
-      @output_format = output_format
+      @voice_id = options.delete(:voice_id) || 'Joanna'
+      @delimiter = options.delete(:delimiter)|| DEFAULT_DELIMITER
+      @comma = options.delete(:comma) || COMMA
+      @sample_rate = options.delete(:sample_rate) || '16000'
+      @output_format = options.delete(:output_format) || 'mp3'
+      @client = Aws::Polly::Client.new(options)
     end
 
     def synthesize(text, file_name: "tmp.mp3")
@@ -21,20 +25,21 @@ module Pollynomial
       File.open(file_name, 'ab') do |file|
         split_text(text).each do |_text|
           tmp_file = Tempfile.new
-          @polly.synthesize_speech(
-            response_target: tmp_file,
-            text: _text,
-            output_format: @output_format,
-            voice_id: @voice_id
+          client.synthesize_speech(
+              response_target: tmp_file,
+              text: _text,
+              output_format: output_format,
+              sample_rate: sample_rate,
+              voice_id: voice_id
             )
           IO.copy_stream(tmp_file, file)
-          sleep(1)
+          sleep(0.1)
         end
       end
     end
 
     def available_voices_in(language_code: 'en-US')
-      voices = @polly.describe_voices(language_code: language_code)
+      voices = client.describe_voices(language_code: language_code)
       voices.voices if voices
     end
 
