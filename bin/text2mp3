@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'pollynomial'
+require 'optparse'
+
+params = ARGV.getopts("v:", "r:", "o:")
+file_name= ARGV.shift
+text = File.open(file_name).read
+options = {voice_id: params['v'], region: params["r"]}
+output = params["o"] || 'tmp.mp3'
+synthesizer = Pollynomial::Synthesizer.new(options)
+synthesizer.synthesize(text, file_name: output)
