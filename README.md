@@ -20,6 +20,11 @@ Or install it yourself as:
 
 ## Usage
 
+```rb
+synthesizer = Pollynomial::Synthesizer.new(options)
+synthesizer.synthesize(text, file_name: output)
+```
+
 There is a executable command `text2mp3`. You can use as following.
 
 ```
