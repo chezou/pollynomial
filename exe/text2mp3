@@ -3,14 +3,14 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'pollynomial'
 require 'docopt'
-require 'pry'
+
 doc = <<DOCOPT
 text2mp3 is convert your text into mp3 using AWS Polly.
 It is assumed to set AWS credentials in environmental variables.
 
 Usage:
-  #{__FILE__} -h | --help
-  #{__FILE__} [--voiceid=<voiceid>] [--region=<region>] [-o <outfile>] [-s <rate>] <path>
+  #{File.basename(__FILE__)} -h | --help
+  #{File.basename(__FILE__)} [--voiceid=<voiceid>] [--region=<region>] [-o <outfile>] [-s <rate>] <path>
 
 Options:
   -h, --help                Show this help
