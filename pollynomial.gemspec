@@ -36,4 +36,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry", "~> 0.10"
   spec.add_development_dependency "pry-byebug", "~> 3.4"
   spec.add_dependency "aws-sdk-polly", "1.0.0.rc2"
+  spec.add_dependency "docopt", "0.5.0"
 end

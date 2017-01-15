@@ -2,12 +2,35 @@
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'pollynomial'
-require 'optparse'
+require 'docopt'
+require 'pry'
+doc = <<DOCOPT
+text2mp3 is convert your text into mp3 using AWS Polly.
+It is assumed to set AWS credentials in environmental variables.
 
-params = ARGV.getopts("v:", "r:", "o:")
-file_name= ARGV.shift
-text = File.open(file_name).read
-options = {voice_id: params['v'], region: params["r"]}
-output = params["o"] || 'tmp.mp3'
-synthesizer = Pollynomial::Synthesizer.new(options)
-synthesizer.synthesize(text, file_name: output)
+Usage:
+  #{__FILE__} -h | --help
+  #{__FILE__} [--voiceid=<voiceid>] [--region=<region>] [-o <outfile>] [-s <rate>] <path>
+
+Options:
+  -h, --help                Show this help
+  --voiceid=<voiceid>       Voice ID of AWS Polly
+  -r, --region <region> AWS region name [dfault: us-east-1]
+  -o, --output <outfile>    Output file name [default: tmp.mp3]
+  -s, --samplerate <rate>   Sampling rate of output file [default: 16000]
+
+DOCOPT
+
+begin
+  params = Docopt::docopt(doc)
+
+  file_name= params["<path>"]
+  text = File.open(file_name).read
+  options = {voice_id: params["--voiceid"], region: params["--region"], sample_rate: params["--samplerate"]}
+  output = params["--output"]
+  synthesizer = Pollynomial::Synthesizer.new(options)
+  synthesizer.synthesize(text, file_name: output)
+rescue Docopt::Exit => e
+  puts e.message
+end
+
