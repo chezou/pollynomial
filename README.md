@@ -28,6 +28,7 @@ synthesizer.synthesize(text, file_name: output)
 There is a executable command `text2mp3`. You can use as following.
 It is assumed to set AWS credentials in environmental variables.
 
+```
 Usage:
   text2mp3 -h | --help
   text2mp3 [--voiceid=<voiceid>] [--region=<region>] [-o <outfile>] [-s <rate>] <path>
@@ -38,6 +39,7 @@ Options:
   -r, --region <region> AWS region name [dfault: us-east-1]
   -o, --output <outfile>    Output file name [default: tmp.mp3]
   -s, --samplerate <rate>   Sampling rate of output file [default: 16000]
+```
 
 ## Development
 
