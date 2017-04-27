@@ -22,12 +22,14 @@ module Pollynomial
 
     def synthesize(text, file_name: "tmp.mp3")
       File.delete(file_name) if File.exist?(file_name)
+      text_type = text =~ /<speak>/ ? 'ssml' : 'text'
       File.open(file_name, 'ab') do |file|
         split_text(text).each do |_text|
           tmp_file = Tempfile.new
           client.synthesize_speech(
               response_target: tmp_file,
               text: _text,
+              text_type: text_type,
               output_format: output_format,
               sample_rate: sample_rate,
               voice_id: voice_id
