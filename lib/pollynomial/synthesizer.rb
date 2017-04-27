@@ -38,9 +38,8 @@ module Pollynomial
       end
     end
 
-    def available_voices_in(language_code: 'en-US')
-      voices = client.describe_voices(language_code: language_code)
-      voices.voices if voices
+    def voices(language=nil)
+      client.describe_voices(language_code: language).voices
     end
 
     def split_text(raw_text)
