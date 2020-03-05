@@ -9,3 +9,5 @@
 /tmp/
 *.mp3
 test.txt
+vendor/
+.DS_Store
